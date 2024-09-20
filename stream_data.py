@@ -5,7 +5,7 @@ import config
 import database
 
 
-def stream_csv_to_postgres(filepath: str, table:str | None) -> None:
+def stream_csv_to_postgres(filepath: str, table: str | None) -> None:
     """Stream CSV data to a PostgreSQL table.
 
     :param filepath: name of local file to stream
@@ -19,9 +19,7 @@ def stream_csv_to_postgres(filepath: str, table:str | None) -> None:
         with database.connect_to_db() as cur:
             # Use PostgreSQL's COPY command for fast bulk insertion
             insert_table = table or config.INSERT_TABLE
-            copy_sql = (
-                f"COPY {insert_table} FROM STDIN WITH CSV HEADER DELIMITER ','"
-            )
+            copy_sql = f"COPY {insert_table} FROM STDIN WITH CSV HEADER DELIMITER ','"
             cur.copy_expert(sql=copy_sql, file=csv_stream)
             print("Data has been successfully inserted into the PostgreSQL table.")
 
@@ -29,7 +27,9 @@ def stream_csv_to_postgres(filepath: str, table:str | None) -> None:
 def parse_args():
     parser = argparse.ArgumentParser(description="Stream CSV data to PostgreSQL")
     parser.add_argument("--filepath", type=str, help="Path to the CSV file")
-    parser.add_argument("--table", type=str, help="Name of the table to insert data into")
+    parser.add_argument(
+        "--table", type=str, help="Name of the table to insert data into"
+    )
     return parser.parse_args()
 
 
