@@ -6,7 +6,11 @@ from sshtunnel import SSHTunnelForwarder
 
 
 @contextmanager
-def ssh_tunnel():
+def ssh_tunnel() -> SSHTunnelForwarder:
+    """Create an SSH tunnel to the remote server.
+
+    :return: Yields the tunnel object.
+    """
     ssh_host = os.environ.get("SSH_HOST")
     ssh_port = int(os.environ.get("SSH_PORT"))
     ssh_user = os.environ.get("SSH_USER")
@@ -31,6 +35,10 @@ def ssh_tunnel():
 
 @contextmanager
 def connect_to_db():
+    """Connect to the PostgreSQL database.
+
+    :return: Yields the database cursor.
+    """
     with ssh_tunnel() as tunnel:
         db_host = os.environ.get("DB_HOST", "localhost")
         db_port = tunnel.local_bind_port
